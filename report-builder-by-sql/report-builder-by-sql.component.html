@@ -1,0 +1,78 @@
+<div class="report-button-container">
+    @if(!isViewMode){
+        <button class="new-visual-button" mat-button (click)="onCreateVisuals()">New Visual</button>
+    }
+    <button [ngClass]="{ 'col-primary': showEditBar }"
+            mat-icon-button
+            class="col-primary-black-1700 col-primary-hover"
+            (click)="showEditBar = !showEditBar">
+    <mat-icon>settings</mat-icon>
+    </button>
+</div>
+<div class="exec-holder flex-row justify-content-between" [ngStyle]="{'display': !hiddenExternalFilters.datetime || !hiddenExternalFilters.assetmask || !hiddenExternalFilters.groupmask ? 'flex' : 'none'}">
+    <app-report-filter [report]="report"
+                       [hiddenFilters]="hiddenExternalFilters"
+                       [requiredFilters]="requiredExternalFilters"
+                       (dateChange)="onDateChange($event)"
+                       (dateRefresh)="executeSql()"
+                       (reportFilter)="onReportFilter($event)">
+    </app-report-filter>
+</div>
+
+<div class="flex-row flex-column-gap-15 report-builder-sql-container">
+    <mat-card class="flexible-length p-0 report-builder-table-container">
+        <gridster [ngClass]="{ 'sql-gridster-edit-mode' : !isViewMode }" style="height: 100%; width: 100%;" [options]="gridsterConfig">
+            @for (visual of reportVisualSql; track visual) {
+                <gridster-item maximize #gridsterItem="maximize" class="report-builder-gridster-sql-item" [item]="visual">
+                    <div class="report-visual-filter-bar">
+                        @if(visual) {
+                            <app-report-visual-top-bar [hideCloseButton]="isViewMode"
+                                                       [hideVisualsInput]="isViewMode"
+                                                       [hideDragIndicator]="isViewMode"
+                                                       [hideRenderOptions]="isViewMode"
+                                                       [enableColumnTotal]="enableColumnTotal[visual.sqlId!]"
+                                                       [allowExport]="!isViewMode"
+                                                       [visual]="visual"
+                                                       (onRefresh)="onVisualRefresh(visual)"
+                                                       (onVisualRemoved)="onVisualRemoved($event)"
+                                                       (renderOptionsChanged)="onRenderOptionsChanged($event)"
+                                                       [isMaximized]="visual.isMaximized"
+                                                       (onMaximized)="onVisualMaximized($event, visual); gridsterItem.toggleFullScreen()"
+                                                    >
+                            </app-report-visual-top-bar>
+                        }
+                    </div>
+                    <report-visual-by-sql class="ignore-draggable"
+                                          [codeModel]="visual.codeModel"
+                                          [dataModel]="visual.dataModel"
+                                          [preventRequest]="visual.preventRequest"
+                                          [id]="visual.sqlId"
+                                          [isViewMode]="isViewMode"
+                                          [datePeriod]="datePeriod"
+                                          [reportAssetAndGroupMask]="reportAssetAndGroupMask"
+                                          [enableColumnTotal]="enableColumnTotal[visual.sqlId]"
+                                          (executionResult)="onExecutionResult($event)"
+                                          (externalFiltersMappingChanges)="onExternalFiltersMappingChange($event)"
+                                          (visualChanges)="onVisualChanges($event)"
+                                          [refreshRequested]="visual.refresh"
+                                   >
+                    </report-visual-by-sql>
+                </gridster-item>
+            }
+        </gridster>
+    </mat-card>
+    
+    @if (showEditBar && report) {
+    <mat-card class="flexible-length p-0 report-builder-side-bar-container">
+            <app-report-side-bar [report]="report"
+                                 [hideReset]="isViewMode"
+                                 [hideSave]="isViewMode"
+                                 [disableName]="isViewMode"
+                                 [disableDescription]="isViewMode"
+                                 [hideManageAccountButton]="isViewMode"
+                                 (onResete)="onReseteReportSql()"
+                                 (onSaveReport)="onSaveReport()">
+            </app-report-side-bar>
+    </mat-card>
+    }
+</div>

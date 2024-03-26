@@ -1,0 +1,52 @@
+:host {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    
+    .report-builder-sql-container {
+        width: 100%;
+        height: 100%;
+    }
+    
+    .report-builder-table-container {
+        width: 80%;
+    }
+    
+    .report-builder-side-bar-container {
+        width: 20%;
+    }
+    
+    .report-button-container {
+        position: absolute;
+        display: flex;
+        align-items: center;
+        top: 75px;
+        right: 7px;
+    
+        .new-visual-button {
+            border: 1px solid #5a8fe6;
+            height: 24px !important;
+        }
+    }
+    
+    .new-visual-button {
+        height: 40px;
+    }
+    
+    .exec-holder {
+        margin-bottom: 15px;
+    }
+    
+    .report-title {
+        font-weight: bold;
+    }
+    
+    .report-builder-gridster-sql-item {
+    
+        .report-visual-filter-bar {
+            background-color: #f5f7f7;
+            display: flex;
+            align-items: center;
+        }
+    }
+}
